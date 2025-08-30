@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Arial', 'Helvetica', sans-serif;
+    background: linear-gradient(135deg, #0066CC 0%, #3399FF 100%);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@layer components {
+  .aol-window {
+    @apply bg-white border-2 border-aol-blue rounded-lg shadow-aol;
+  }
+  
+  .aol-title-bar {
+    @apply bg-aol-blue text-white px-4 py-2 font-bold text-sm flex items-center justify-between;
+  }
+  
+  .aol-button {
+    @apply bg-aol-light-blue hover:bg-aol-dark-blue text-white font-bold py-2 px-4 rounded border-2 border-aol-dark-blue shadow-aol transition-colors duration-200;
+  }
+  
+  .aol-input {
+    @apply border-2 border-aol-gray rounded px-3 py-2 font-aol focus:border-aol-blue focus:outline-none;
+  }
+  
+  .aol-message {
+    @apply bg-aol-light-gray border border-aol-gray rounded-lg p-3 mb-2 max-w-xs;
+  }
+  
+  .aol-message-user {
+    @apply bg-aol-light-blue text-white ml-auto;
+  }
+  
+  .aol-message-ai {
+    @apply bg-aol-light-gray text-black;
+  }
+  
+  .aol-status {
+    @apply text-aol-green font-bold text-sm;
+  }
+  
+  .aol-error {
+    @apply text-red-600 font-bold text-sm;
+  }
+}
