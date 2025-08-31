@@ -1,15 +1,18 @@
-# AOL Instant Messenger - ChatGPT Edition 🚀
+# Matrix Terminal - ChatGPT Interface 🖥️
 
-Welcome to the classic AOL Instant Messenger interface reimagined for chatting with ChatGPT! This nostalgic frontend brings back the beloved AIM experience while connecting to modern AI technology.
+Welcome to the Matrix Terminal interface for ChatGPT! This cyberpunk-themed terminal brings the iconic Matrix aesthetic to modern AI conversations. Experience the future of chat with a retro-futuristic terminal interface.
 
 ## ✨ Features
 
-- 🎨 **Classic AOL Instant Messenger Design** - Authentic retro styling with the iconic blue theme
+- 🎨 **Matrix Terminal Design** - Authentic cyberpunk styling with green text on black backgrounds
 - 🤖 **ChatGPT Integration** - Real-time conversations with OpenAI's AI models
-- 📡 **Streaming Responses** - Watch AI responses appear in real-time, just like the old days
+- 📡 **Streaming Responses** - Watch AI responses appear in real-time with terminal-style typing
 - 🔐 **Secure API Key Management** - Password-style input for your OpenAI API key
 - 📱 **Responsive Design** - Works great on desktop and mobile devices
 - ⚡ **Fast Performance** - Built with Next.js for optimal speed
+- 🌧️ **Matrix Rain Effect** - Animated background with falling characters
+- 💻 **Terminal Cursor** - Authentic blinking cursor effect
+- 🎭 **Cyberpunk Aesthetics** - Glowing effects, terminal fonts, and Matrix colors
 
 ## 🛠️ Prerequisites
 
@@ -39,31 +42,32 @@ The application will be available at `http://localhost:3000`
 
 ### 3. Configure Your API Key
 
-1. Click the **Settings** icon (⚙️) in the top-right corner of the chat window
+1. Click the **Settings** icon (⚙️) in the top-right corner of the terminal
 2. Enter your **OpenAI API Key** in the password field
 3. The connection status will show green when connected
 
-### 4. Start Chatting!
+### 4. Begin Communication
 
-- Type your message in the input field
+- Type your message in the terminal input
 - Press **Enter** to send
-- Watch ChatGPT respond in real-time with the classic AIM style
+- Watch ChatGPT respond in real-time with Matrix-style text
 
 ## 🎯 How to Use
 
-### Basic Chatting
+### Basic Terminal Commands
 - **Send Message**: Type and press Enter
 - **New Line**: Press Shift+Enter
 - **Settings**: Click the gear icon to manage your API key
+- **Abort**: Ctrl+C (visual only)
 
 ### Message Types
-- **Your Messages**: Appear in blue bubbles on the right
-- **AI Responses**: Appear in gray bubbles on the left
-- **Timestamps**: Each message shows when it was sent
+- **Your Messages**: Appear in bright green with USER label
+- **AI Responses**: Appear in standard green with AI_ASSISTANT label
+- **Timestamps**: Each message shows when it was sent in [HH:MM:SS] format
 
 ### Connection Status
-- 🟢 **Green Dot**: Connected and ready to chat
-- 🟠 **Orange Dot**: Disconnected (check your API key)
+- 🟢 **Green Dots**: Connected and ready for communication
+- 🔴 **Red Dots**: Disconnected (check your API key)
 
 ## 🔧 Development
 
@@ -72,11 +76,11 @@ The application will be available at `http://localhost:3000`
 frontend/
 ├── app/                    # Next.js app directory
 │   ├── api/               # API routes
-│   ├── globals.css        # Global styles
+│   ├── globals.css        # Global styles with Matrix theme
 │   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Main chat interface
+│   └── page.tsx           # Main terminal interface
 ├── package.json           # Dependencies and scripts
-├── tailwind.config.js     # Tailwind CSS configuration
+├── tailwind.config.js     # Tailwind CSS with Matrix colors
 └── tsconfig.json          # TypeScript configuration
 ```
 
@@ -87,11 +91,18 @@ frontend/
 - `npm run lint` - Run ESLint
 
 ### Styling
-The app uses **Tailwind CSS** with custom AOL-themed colors:
-- `aol-blue` (#0066CC) - Primary blue
-- `aol-light-blue` (#3399FF) - Light blue
-- `aol-green` (#00CC00) - Online status
-- `aol-orange` (#FF6600) - Disconnected status
+The app uses **Tailwind CSS** with custom Matrix-themed colors:
+- `matrix-green` (#00FF00) - Primary green text
+- `matrix-bright` (#00FF41) - Bright green for highlights
+- `matrix-bg` (#000000) - Pure black background
+- `matrix-dark-bg` (#0A0A0A) - Dark background for panels
+- `matrix-gray` (#1A1A1A) - Gray for secondary elements
+
+### Animations
+- **Matrix Rain**: Falling characters in the background
+- **Terminal Cursor**: Blinking cursor effect
+- **Glow Effects**: Hover effects on interactive elements
+- **Pulse Animations**: Loading indicators
 
 ## 🌐 Deployment
 
@@ -122,13 +133,14 @@ This frontend connects to the FastAPI backend located in the `../api/` directory
 ## 🎨 Customization
 
 ### Changing Colors
-Edit `tailwind.config.js` to modify the AOL color scheme:
+Edit `tailwind.config.js` to modify the Matrix color scheme:
 
 ```javascript
 colors: {
-  'aol-blue': '#0066CC',        // Main blue
-  'aol-light-blue': '#3399FF',  // Light blue
-  'aol-green': '#00CC00',       // Online status
+  'matrix-green': '#00FF00',        // Main green
+  'matrix-bright': '#00FF41',       // Bright green
+  'matrix-bg': '#000000',           // Background
+  'matrix-dark-bg': '#0A0A0A',      // Dark panels
   // ... add more colors
 }
 ```
@@ -137,8 +149,19 @@ colors: {
 Update `app/globals.css` to change component styles:
 
 ```css
-.aol-window {
-  @apply bg-white border-2 border-aol-blue rounded-lg shadow-aol;
+.matrix-window {
+  @apply bg-matrix-bg border border-matrix-green rounded-none shadow-matrix;
+}
+```
+
+### Animation Effects
+Customize animations in `tailwind.config.js`:
+
+```javascript
+animation: {
+  'matrix-fade': 'matrixFade 2s ease-in-out infinite',
+  'terminal-blink': 'terminalBlink 1s infinite',
+  // ... add more animations
 }
 ```
 
@@ -146,12 +169,12 @@ Update `app/globals.css` to change component styles:
 
 ### Common Issues
 
-**"Failed to get response from AI"**
+**"ERROR: API_KEY_NOT_FOUND"**
 - Check your OpenAI API key is correct
 - Ensure you have sufficient API credits
 - Verify the FastAPI backend is running
 
-**"Connection Refused"**
+**"CONNECTION_FAILED: Backend unreachable"**
 - Make sure the FastAPI backend is running on port 8000
 - Check if the backend URL is correct in the API route
 
@@ -159,6 +182,11 @@ Update `app/globals.css` to change component styles:
 - Clear your browser cache
 - Restart the development server
 - Check that Tailwind CSS is properly configured
+
+**Matrix Rain Not Showing**
+- Ensure your browser supports CSS animations
+- Check if JavaScript is enabled
+- Try refreshing the page
 
 ## 📞 Support
 
@@ -169,10 +197,10 @@ If you encounter any issues:
 3. Ensure the FastAPI backend is running
 4. Check the network tab for failed requests
 
-## 🎉 Enjoy Your AOL Experience!
+## 🎉 Welcome to the Matrix!
 
-Relive the nostalgia of AOL Instant Messenger while chatting with modern AI technology. The familiar interface will make you feel right at home! 
+Experience the future of AI communication through the lens of cyberpunk aesthetics. The Matrix Terminal brings together the nostalgic feel of classic terminals with the power of modern AI technology.
 
 ---
 
-*"You've got mail!" - but now it's from ChatGPT! 🤖✨*
+*"Wake up, Neo... The Matrix has you." - Now with ChatGPT integration! 🤖✨*

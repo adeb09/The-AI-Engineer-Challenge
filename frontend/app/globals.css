@@ -4,48 +4,124 @@
 
 @layer base {
   body {
-    font-family: 'Arial', 'Helvetica', sans-serif;
-    background: linear-gradient(135deg, #0066CC 0%, #3399FF 100%);
+    font-family: 'Courier New', 'Courier', monospace;
+    background: linear-gradient(135deg, #000000 0%, #0A0A0A 100%);
     min-height: 100vh;
     margin: 0;
     padding: 0;
+    color: #00FF00;
+    overflow-x: hidden;
+  }
+
+  /* Matrix rain background effect */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      linear-gradient(90deg, transparent 98%, #00FF00 100%),
+      linear-gradient(180deg, transparent 98%, #00FF00 100%);
+    background-size: 50px 50px;
+    opacity: 0.1;
+    z-index: -1;
+    animation: matrixRain 20s linear infinite;
+  }
+
+  /* Terminal cursor blink */
+  .terminal-cursor::after {
+    content: '█';
+    animation: terminalBlink 1s infinite;
+    color: #00FF00;
   }
 }
 
 @layer components {
-  .aol-window {
-    @apply bg-white border-2 border-aol-blue rounded-lg shadow-aol;
+  .matrix-window {
+    @apply bg-matrix-bg border border-matrix-green rounded-none shadow-matrix;
+    background: linear-gradient(145deg, #000000 0%, #0A0A0A 100%);
   }
   
-  .aol-title-bar {
-    @apply bg-aol-blue text-white px-4 py-2 font-bold text-sm flex items-center justify-between;
+  .matrix-title-bar {
+    @apply bg-matrix-gray text-matrix-green px-4 py-2 font-bold text-sm flex items-center justify-between border-b border-matrix-green;
+    background: linear-gradient(90deg, #1A1A1A 0%, #2A2A2A 100%);
   }
   
-  .aol-button {
-    @apply bg-aol-light-blue hover:bg-aol-dark-blue text-white font-bold py-2 px-4 rounded border-2 border-aol-dark-blue shadow-aol transition-colors duration-200;
+  .matrix-button {
+    @apply bg-matrix-gray hover:bg-matrix-light-gray text-matrix-green font-bold py-2 px-4 rounded-none border border-matrix-green shadow-terminal transition-all duration-200 hover:shadow-matrix-glow;
   }
   
-  .aol-input {
-    @apply border-2 border-aol-gray rounded px-3 py-2 font-aol focus:border-aol-blue focus:outline-none;
+  .matrix-input {
+    @apply border border-matrix-green rounded-none px-3 py-2 font-terminal bg-matrix-bg text-matrix-green focus:border-matrix-green focus:outline-none focus:shadow-matrix-glow;
+    background: #000000;
   }
   
-  .aol-message {
-    @apply bg-aol-light-gray border border-aol-gray rounded-lg p-3 mb-2 max-w-xs;
+  .matrix-message {
+    @apply bg-matrix-dark-bg border border-matrix-green rounded-none p-3 mb-2 max-w-xs;
+    background: linear-gradient(145deg, #0A0A0A 0%, #1A1A1A 100%);
   }
   
-  .aol-message-user {
-    @apply bg-aol-light-blue text-white ml-auto;
+  .matrix-message-user {
+    @apply bg-matrix-gray text-matrix-green ml-auto border-matrix-green;
   }
   
-  .aol-message-ai {
-    @apply bg-aol-light-gray text-black;
+  .matrix-message-ai {
+    @apply bg-matrix-dark-bg text-matrix-green border-matrix-green;
   }
   
-  .aol-status {
-    @apply text-aol-green font-bold text-sm;
+  .matrix-status {
+    @apply text-matrix-green font-bold text-sm;
   }
   
-  .aol-error {
-    @apply text-red-600 font-bold text-sm;
+  .matrix-error {
+    @apply text-red-500 font-bold text-sm;
+  }
+
+  .terminal-text {
+    @apply font-terminal text-matrix-green;
+  }
+
+  .matrix-glow {
+    @apply shadow-matrix-glow;
+  }
+
+  .terminal-header {
+    @apply text-matrix-green font-terminal text-lg mb-2;
+  }
+
+  .matrix-divider {
+    @apply border-t border-matrix-green my-2;
+  }
+
+  .terminal-prompt {
+    @apply text-matrix-green font-terminal;
+  }
+
+  .matrix-loading {
+    @apply text-matrix-green font-terminal;
+  }
+
+  .terminal-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #00FF00 #000000;
+  }
+
+  .terminal-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .terminal-scrollbar::-webkit-scrollbar-track {
+    background: #000000;
+  }
+
+  .terminal-scrollbar::-webkit-scrollbar-thumb {
+    background: #00FF00;
+    border-radius: 0;
+  }
+
+  .terminal-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #00CC00;
   }
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Send, Settings, User, Bot } from 'lucide-react'
+import { Send, Settings, User, Bot, Terminal, Zap } from 'lucide-react'
 
 interface Message {
   id: string
@@ -19,10 +19,15 @@ export default function Home() {
   const [error, setError] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [showSettings, setShowSettings] = useState(false)
+  const [isClient, setIsClient] = useState(false)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   useEffect(() => {
     scrollToBottom()
@@ -30,7 +35,7 @@ export default function Home() {
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || !apiKey.trim()) {
-      setError('Please enter both a message and your OpenAI API key')
+      setError('ERROR: API_KEY_NOT_FOUND || MESSAGE_EMPTY')
       return
     }
 
@@ -61,12 +66,12 @@ export default function Home() {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to get response from AI')
+        throw new Error('CONNECTION_FAILED: Backend unreachable')
       }
 
       const reader = response.body?.getReader()
       if (!reader) {
-        throw new Error('No response body')
+        throw new Error('STREAM_ERROR: No response body')
       }
 
       const aiMessage: Message = {
@@ -99,7 +104,7 @@ export default function Home() {
 
       setIsConnected(true)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : 'UNKNOWN_ERROR: System failure')
       setIsConnected(false)
     } finally {
       setIsLoading(false)
@@ -113,21 +118,66 @@ export default function Home() {
     }
   }
 
+  // Generate deterministic Matrix rain characters
+  const generateMatrixRain = () => {
+    const characters = []
+    for (let i = 0; i < 20; i++) {
+      // Use a deterministic seed based on position
+      const seed = i * 7 + 13
+      const charCode = 0x30A0 + (seed % 96)
+      characters.push({
+        id: i,
+        char: String.fromCharCode(charCode),
+        left: `${(seed * 11) % 100}%`,
+        delay: `${(seed * 3) % 5}s`,
+        duration: `${3 + (seed % 2)}s`
+      })
+    }
+    return characters
+  }
+
+  const matrixRainChars = generateMatrixRain()
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-aol-blue to-aol-light-blue p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Main Chat Window */}
-        <div className="aol-window">
-          {/* Title Bar */}
-          <div className="aol-title-bar">
+    <div className="min-h-screen bg-matrix-bg p-4 relative overflow-hidden">
+      {/* Matrix rain background - only render on client */}
+      {isClient && (
+        <div className="fixed inset-0 pointer-events-none">
+          {matrixRainChars.map((char) => (
+            <div
+              key={char.id}
+              className="absolute text-matrix-green text-xs opacity-20 animate-matrix-rain"
+              style={{
+                left: char.left,
+                animationDelay: char.delay,
+                animationDuration: char.duration
+              }}
+            >
+              {char.char}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="max-w-4xl mx-auto relative z-10">
+        {/* Main Terminal Window */}
+        <div className="matrix-window">
+          {/* Terminal Header */}
+          <div className="matrix-title-bar">
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-aol-green rounded-full"></div>
-              <span>AOL Instant Messenger - ChatGPT Edition</span>
+              <Terminal size={20} className="text-matrix-green" />
+              <span className="terminal-text">MATRIX_TERMINAL_v1.0</span>
+              <div className="flex space-x-1">
+                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-matrix-green' : 'bg-red-500'}`}></div>
+                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-matrix-green' : 'bg-red-500'}`}></div>
+                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-matrix-green' : 'bg-red-500'}`}></div>
+              </div>
             </div>
             <div className="flex items-center space-x-2">
+              <span className="text-matrix-dim text-xs">SYSTEM: {isConnected ? 'ONLINE' : 'OFFLINE'}</span>
               <button 
                 onClick={() => setShowSettings(!showSettings)}
-                className="text-white hover:text-aol-yellow transition-colors"
+                className="text-matrix-green hover:text-matrix-green transition-colors"
               >
                 <Settings size={16} />
               </button>
@@ -136,76 +186,82 @@ export default function Home() {
 
           {/* Settings Panel */}
           {showSettings && (
-            <div className="p-4 border-b border-aol-gray bg-aol-light-gray">
+            <div className="p-4 border-b border-matrix-green bg-matrix-dark-bg">
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm font-bold text-aol-dark-gray mb-1">
-                    OpenAI API Key:
+                  <label className="block text-sm font-bold text-matrix-green mb-1">
+                    OPENAI_API_KEY:
                   </label>
                   <input
                     type="password"
                     value={apiKey}
                     onChange={(e) => setApiKey(e.target.value)}
                     placeholder="Enter your OpenAI API key"
-                    className="aol-input w-full"
+                    className="matrix-input w-full"
                   />
                 </div>
                 <div className="flex items-center space-x-2">
-                  <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-aol-green' : 'bg-aol-orange'}`}></div>
-                  <span className="text-sm font-bold">
-                    {isConnected ? 'Connected' : 'Disconnected'}
+                  <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-matrix-green' : 'bg-red-500'}`}></div>
+                  <span className="text-sm font-bold text-matrix-green">
+                    STATUS: {isConnected ? 'CONNECTED' : 'DISCONNECTED'}
                   </span>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Chat Messages */}
-          <div className="h-96 overflow-y-auto p-4 bg-white">
+          {/* Chat Terminal */}
+          <div className="h-96 overflow-y-auto p-4 bg-matrix-bg terminal-scrollbar">
             {messages.length === 0 ? (
-              <div className="text-center text-aol-dark-gray mt-20">
-                <Bot size={48} className="mx-auto mb-4 text-aol-blue" />
-                <p className="text-lg font-bold">Welcome to AOL Instant Messenger!</p>
-                <p className="text-sm">Enter your OpenAI API key in settings and start chatting with ChatGPT</p>
+              <div className="text-center text-matrix-dim mt-20">
+                <Terminal size={48} className="mx-auto mb-4 text-matrix-green" />
+                <p className="text-lg font-bold text-matrix-green mb-2">MATRIX TERMINAL INITIALIZED</p>
+                <p className="text-sm text-matrix-dim">Enter your OpenAI API key in settings and begin communication</p>
+                <div className="mt-4 text-xs text-matrix-green">
+                  <p>SYSTEM: Ready for input...</p>
+                  <p>PROTOCOL: ChatGPT v4.1-mini</p>
+                  <p>STATUS: Awaiting connection</p>
+                </div>
               </div>
             ) : (
               <div className="space-y-2">
                 {messages.map((message) => (
                   <div
                     key={message.id}
-                    className={`aol-message ${
-                      message.sender === 'user' ? 'aol-message-user' : 'aol-message-ai'
+                    className={`matrix-message ${
+                      message.sender === 'user' ? 'matrix-message-user' : 'matrix-message-ai'
                     }`}
                   >
                     <div className="flex items-start space-x-2">
                       <div className="flex-shrink-0">
                         {message.sender === 'user' ? (
-                          <User size={16} className="text-white" />
+                          <User size={16} className="text-matrix-green" />
                         ) : (
-                          <Bot size={16} className="text-aol-blue" />
+                          <Bot size={16} className="text-matrix-green" />
                         )}
                       </div>
                       <div className="flex-1">
-                        <div className="text-xs font-bold mb-1">
-                          {message.sender === 'user' ? 'You' : 'ChatGPT'}
+                        <div className="text-xs font-bold mb-1 text-matrix-dim">
+                          {message.sender === 'user' ? 'USER' : 'AI_ASSISTANT'}
                         </div>
-                        <div className="whitespace-pre-wrap">{message.content}</div>
-                        <div className="text-xs text-aol-dark-gray mt-1">
-                          {message.timestamp.toLocaleTimeString()}
+                        <div className="whitespace-pre-wrap font-terminal">{message.content}</div>
+                        <div className="text-xs text-matrix-dim mt-1">
+                          [{message.timestamp.toLocaleTimeString()}]
                         </div>
                       </div>
                     </div>
                   </div>
                 ))}
                 {isLoading && (
-                  <div className="aol-message aol-message-ai">
+                  <div className="matrix-message matrix-message-ai">
                     <div className="flex items-center space-x-2">
-                      <Bot size={16} className="text-aol-blue" />
+                      <Bot size={16} className="text-matrix-green" />
                       <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-aol-blue rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-aol-blue rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                        <div className="w-2 h-2 bg-aol-blue rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                        <div className="w-2 h-2 bg-matrix-green rounded-full animate-pulse"></div>
+                        <div className="w-2 h-2 bg-matrix-green rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+                        <div className="w-2 h-2 bg-matrix-green rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
                       </div>
+                      <span className="text-matrix-dim text-xs ml-2">PROCESSING...</span>
                     </div>
                   </div>
                 )}
@@ -216,45 +272,54 @@ export default function Home() {
 
           {/* Error Display */}
           {error && (
-            <div className="p-3 bg-red-100 border border-red-300 text-red-700">
+            <div className="p-3 bg-red-900 border border-red-500 text-red-300">
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <span className="font-bold">Error:</span>
-                <span>{error}</span>
+                <span className="font-bold text-red-300">ERROR:</span>
+                <span className="font-terminal">{error}</span>
               </div>
             </div>
           )}
 
-          {/* Input Area */}
-          <div className="p-4 border-t border-aol-gray bg-aol-light-gray">
+          {/* Input Terminal */}
+          <div className="p-4 border-t border-matrix-green bg-matrix-dark-bg">
             <div className="flex space-x-2">
-              <input
-                type="text"
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Type your message here..."
-                className="aol-input flex-1"
-                disabled={isLoading}
-              />
+              <div className="flex-1 flex items-center">
+                <span className="text-matrix-green mr-2 font-terminal">{'>'}</span>
+                <input
+                  type="text"
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Enter your message..."
+                  className="matrix-input flex-1 bg-transparent border-none focus:ring-0"
+                  disabled={isLoading}
+                />
+                {!isLoading && <span className="terminal-cursor"></span>}
+              </div>
               <button
                 onClick={handleSendMessage}
                 disabled={isLoading || !inputMessage.trim()}
-                className="aol-button disabled:opacity-50 disabled:cursor-not-allowed"
+                className="matrix-button disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send size={16} />
               </button>
             </div>
-            <div className="text-xs text-aol-dark-gray mt-2">
-              Press Enter to send, Shift+Enter for new line
+            <div className="text-xs text-matrix-dim mt-2 font-terminal">
+              COMMAND: Press Enter to send | Shift+Enter for new line | Ctrl+C to abort
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="text-center text-white text-sm mt-4">
-          <p>© 2024 AOL Instant Messenger - ChatGPT Edition</p>
-          <p className="text-xs opacity-75">Powered by OpenAI API</p>
+        <div className="text-center text-matrix-dim text-sm mt-4 font-terminal">
+          <p>© 2024 MATRIX TERMINAL - ChatGPT Interface</p>
+          <p className="text-xs opacity-75">Powered by OpenAI API | Protocol: v1.0</p>
+          <div className="flex justify-center space-x-4 mt-2 text-xs">
+            <span className="text-matrix-green">● SYSTEM_ACTIVE</span>
+            <span className="text-matrix-dim">● ENCRYPTION_ENABLED</span>
+            <span className="text-matrix-dim">● MATRIX_PROTOCOL</span>
+          </div>
         </div>
       </div>
     </div>
