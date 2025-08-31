@@ -166,7 +166,7 @@ export default function Home() {
           <div className="matrix-title-bar">
             <div className="flex items-center space-x-2">
               <Terminal size={20} className="text-matrix-green" />
-              <span className="terminal-text">MATRIX_TERMINAL_v1.0</span>
+              <span className="terminal-text">YOUR_OPENAI_CHAT_TERMINAL_v1.0</span>
               <div className="flex space-x-1">
                 <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-matrix-green' : 'bg-red-500'}`}></div>
                 <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-matrix-green' : 'bg-red-500'}`}></div>
@@ -215,7 +215,7 @@ export default function Home() {
             {messages.length === 0 ? (
               <div className="text-center text-matrix-dim mt-20">
                 <Terminal size={48} className="mx-auto mb-4 text-matrix-green" />
-                <p className="text-lg font-bold text-matrix-green mb-2">MATRIX TERMINAL INITIALIZED</p>
+                <p className="text-lg font-bold text-matrix-green mb-2">YOUR OPENAI CHAT TERMINAL INITIALIZED</p>
                 <p className="text-sm text-matrix-dim">Enter your OpenAI API key in settings and begin communication</p>
                 <div className="mt-4 text-xs text-matrix-green">
                   <p>SYSTEM: Ready for input...</p>
@@ -313,7 +313,7 @@ export default function Home() {
 
         {/* Footer */}
         <div className="text-center text-matrix-dim text-sm mt-4 font-terminal">
-          <p>© 2024 MATRIX TERMINAL - ChatGPT Interface</p>
+          <p>© 2024 YOUR OPENAI CHAT TERMINAL - ChatGPT Interface</p>
           <p className="text-xs opacity-75">Powered by OpenAI API | Protocol: v1.0</p>
           <div className="flex justify-center space-x-4 mt-2 text-xs">
             <span className="text-matrix-green">● SYSTEM_ACTIVE</span>
