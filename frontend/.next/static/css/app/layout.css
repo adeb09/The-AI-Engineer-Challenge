@@ -897,8 +897,15 @@ video {
   font-size: 0.75rem;
   line-height: 1rem;
 }
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
 .font-bold {
   font-weight: 700;
+}
+.tracking-wider {
+  letter-spacing: 0.05em;
 }
 .text-matrix-dim {
   --tw-text-opacity: 1;
