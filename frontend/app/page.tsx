@@ -30,7 +30,7 @@ const OpenAILogo = ({ size = 20, className = "" }: { size?: number, className?: 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputMessage, setInputMessage] = useState('')
-  const [apiKey, setApiKey] = useState('')
+
   const [isLoading, setIsLoading] = useState(false)
   const [isConnected, setIsConnected] = useState(false)
   const [error, setError] = useState('')
@@ -51,8 +51,8 @@ export default function Home() {
   }, [messages])
 
   const handleSendMessage = async () => {
-    if (!inputMessage.trim() || !apiKey.trim()) {
-      setError('ERROR: API_KEY_NOT_FOUND || MESSAGE_EMPTY')
+    if (!inputMessage.trim()) {
+      setError('ERROR: MESSAGE_EMPTY')
       return
     }
 
@@ -77,8 +77,7 @@ export default function Home() {
         body: JSON.stringify({
           developer_message: "You are a helpful AI assistant. Respond in a friendly, conversational manner.",
           user_message: inputMessage,
-          model: "gpt-4.1-mini",
-          api_key: apiKey
+          model: "gpt-4.1-mini"
         }),
       })
 
@@ -205,23 +204,15 @@ export default function Home() {
           {showSettings && (
             <div className="p-4 border-b border-matrix-green bg-matrix-dark-bg">
               <div className="space-y-3">
-                <div>
-                  <label className="block text-sm font-bold text-matrix-green mb-1">
-                    OPENAI_API_KEY:
-                  </label>
-                  <input
-                    type="password"
-                    value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
-                    placeholder="Enter your OpenAI API key"
-                    className="matrix-input w-full"
-                  />
-                </div>
                 <div className="flex items-center space-x-2">
                   <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-matrix-green' : 'bg-red-500'}`}></div>
                   <span className="text-sm font-bold text-matrix-green">
                     STATUS: {isConnected ? 'CONNECTED' : 'DISCONNECTED'}
                   </span>
+                </div>
+                <div className="text-xs text-matrix-dim">
+                  <p>API Key: Configured via environment variables</p>
+                  <p>Model: gpt-4.1-mini</p>
                 </div>
               </div>
             </div>
@@ -233,11 +224,11 @@ export default function Home() {
               <div className="text-center text-matrix-dim mt-20">
                 <Terminal size={48} className="mx-auto mb-4 text-matrix-green" />
                 <p className="text-lg font-bold text-matrix-green mb-2">YOUR OPENAI CHAT TERMINAL INITIALIZED</p>
-                <p className="text-sm text-matrix-dim">Enter your OpenAI API key in settings and begin communication</p>
+                <p className="text-sm text-matrix-dim">Ready to communicate - API key configured via backend</p>
                 <div className="mt-4 text-xs text-matrix-green">
                   <p>SYSTEM: Ready for input...</p>
                   <p>PROTOCOL: ChatGPT v4.1-mini</p>
-                  <p>STATUS: Awaiting connection</p>
+                  <p>STATUS: Connected to backend</p>
                 </div>
               </div>
             ) : (
@@ -331,10 +322,10 @@ export default function Home() {
         {/* Footer */}
         <div className="text-center text-matrix-dim text-sm mt-4 font-terminal">
           <p>© 2024 YOUR OPENAI CHAT TERMINAL - ChatGPT Interface</p>
-          <p className="text-xs opacity-75">Powered by OpenAI API | Protocol: v1.0</p>
+          <p className="text-xs opacity-75">Powered by OpenAI API | Protocol: v1.0 | Backend Configured</p>
           <div className="flex justify-center space-x-4 mt-2 text-xs">
             <span className="text-matrix-green">● SYSTEM_ACTIVE</span>
-            <span className="text-matrix-dim">● ENCRYPTION_ENABLED</span>
+            <span className="text-matrix-green">● API_CONFIGURED</span>
             <span className="text-matrix-dim">● MATRIX_PROTOCOL</span>
           </div>
         </div>
