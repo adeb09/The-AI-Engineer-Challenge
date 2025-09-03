@@ -2,7 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Matrix Terminal - ChatGPT Interface',
+  title: 'Matrix Terminal',
   description: 'Chat with ChatGPT using a Matrix-style terminal interface',
 }
 
