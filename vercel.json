@@ -1,15 +1,10 @@
 {
   "version": 2,
-  "builds": [
-    { 
-      "src": "frontend/package.json", 
-      "use": "@vercel/next" 
-    },
-    { 
-      "src": "api/app.py",
-      "use": "@vercel/python"
+  "functions": {
+    "api/app.py": {
+      "runtime": "python3.11"
     }
-  ],
+  },
   "routes": [
     { 
       "src": "/api/(.*)", 
@@ -22,10 +17,5 @@
   ],
   "env": {
     "BACKEND_URL": "@backend_url"
-  },
-  "functions": {
-    "api/app.py": {
-      "runtime": "python3.9"
-    }
   }
 } 
