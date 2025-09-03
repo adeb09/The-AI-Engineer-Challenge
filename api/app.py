@@ -14,8 +14,11 @@ from typing import Optional
 try:
     from dotenv import load_dotenv
     load_dotenv()
+    print(f"🔧 Loaded .env file. OPENAI_API_KEY: {'✅ Set' if os.getenv('OPENAI_API_KEY') else '❌ Not found'}")
+    print(f"🔧 OPENAI_MODEL: {os.getenv('OPENAI_MODEL', 'Not set')}")
 except ImportError:
     # dotenv is optional, so we'll continue without it
+    print("⚠️  python-dotenv not installed, using system environment variables")
     pass
 
 # Initialize FastAPI application with a title
