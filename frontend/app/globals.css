@@ -32,9 +32,8 @@
 
   /* Terminal cursor blink */
   .terminal-cursor::after {
-    content: '█';
-    animation: terminalBlink 1s infinite;
-    color: #00FF00;
+    content: '';
+    animation: none;
   }
 }
 
@@ -56,6 +55,8 @@
   .matrix-input {
     @apply border border-matrix-green rounded-none px-3 py-2 font-terminal bg-matrix-bg text-matrix-green focus:border-matrix-green focus:outline-none focus:shadow-matrix-glow;
     background: #000000;
+    caret-color: #00FF00;
+    caret-width: thick;
   }
   
   .matrix-message {

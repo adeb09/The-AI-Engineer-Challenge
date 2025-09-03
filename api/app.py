@@ -27,21 +27,31 @@ app.add_middleware(
 class ChatRequest(BaseModel):
     developer_message: str  # Message from the developer/system
     user_message: str      # Message from the user
-    model: Optional[str] = "gpt-4.1-mini"  # Optional model selection with default
-    api_key: str          # OpenAI API key for authentication
+    model: Optional[str] = None  # Optional model selection, will use env var or default if not provided
 
 # Define the main chat endpoint that handles POST requests
 @app.post("/api/chat")
 async def chat(request: ChatRequest):
     try:
-        # Initialize OpenAI client with the provided API key
-        client = OpenAI(api_key=request.api_key)
+        # Get OpenAI API key from environment variable
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise HTTPException(
+                status_code=500, 
+                detail="OpenAI API key not configured. Please set OPENAI_API_KEY environment variable."
+            )
+        
+        # Determine which model to use: request model > environment variable > default
+        model = request.model or os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
+        
+        # Initialize OpenAI client with the API key from environment
+        client = OpenAI(api_key=api_key)
         
         # Create an async generator function for streaming responses
         async def generate():
             # Create a streaming chat completion request
             stream = client.chat.completions.create(
-                model=request.model,
+                model=model,
                 messages=[
                     {"role": "developer", "content": request.developer_message},
                     {"role": "user", "content": request.user_message}
@@ -57,8 +67,11 @@ async def chat(request: ChatRequest):
         # Return a streaming response to the client
         return StreamingResponse(generate(), media_type="text/plain")
     
+    except HTTPException:
+        # Re-raise HTTP exceptions (like missing API key)
+        raise
     except Exception as e:
-        # Handle any errors that occur during processing
+        # Handle any other errors that occur during processing
         raise HTTPException(status_code=500, detail=str(e))
 
 # Define a health check endpoint to verify API status

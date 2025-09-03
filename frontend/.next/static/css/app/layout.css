@@ -530,11 +530,6 @@ video {
   }
 
   /* Terminal cursor blink */
-  .terminal-cursor::after {
-    content: '█';
-    animation: terminalBlink 1s infinite;
-    color: #00FF00;
-  }
 .matrix-window {
   border-radius: 0px;
   border-width: 1px;
@@ -625,6 +620,8 @@ video {
 }
 .matrix-input {
     background: #000000;
+    caret-color: #00FF00;
+    caret-width: thick;
   }
 .matrix-message {
   margin-bottom: 0.5rem;
@@ -652,11 +649,6 @@ video {
   border-color: rgb(0 255 0 / var(--tw-border-opacity, 1));
   --tw-bg-opacity: 1;
   background-color: rgb(10 10 10 / var(--tw-bg-opacity, 1));
-  --tw-text-opacity: 1;
-  color: rgb(0 255 0 / var(--tw-text-opacity, 1));
-}
-.terminal-text {
-  font-family: Courier New, Courier, monospace;
   --tw-text-opacity: 1;
   color: rgb(0 255 0 / var(--tw-text-opacity, 1));
 }
@@ -893,13 +885,13 @@ video {
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
-.text-xs {
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 .font-bold {
   font-weight: 700;
@@ -930,22 +922,18 @@ video {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
-
 .hover\:text-matrix-green:hover {
   --tw-text-opacity: 1;
   color: rgb(0 255 0 / var(--tw-text-opacity, 1));
 }
-
 .focus\:ring-0:focus {
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
-
 .disabled\:cursor-not-allowed:disabled {
   cursor: not-allowed;
 }
-
 .disabled\:opacity-50:disabled {
   opacity: 0.5;
 }

@@ -312,7 +312,7 @@ export default function Home() {
                   className="matrix-input flex-1 bg-transparent border-none focus:ring-0"
                   disabled={isLoading}
                 />
-                {!isLoading && <span className="terminal-cursor"></span>}
+
               </div>
               <button
                 onClick={handleSendMessage}

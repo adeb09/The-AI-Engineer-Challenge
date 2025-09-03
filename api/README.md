@@ -18,7 +18,19 @@ source venv/bin/activate  # On Windows, use: venv\Scripts\activate
 
 2. Install the required dependencies:
 ```bash
-pip install fastapi uvicorn openai pydantic
+pip install -r requirements.txt
+```
+
+3. Set up environment variables:
+   - Copy the example below and create a `.env` file in the `api` directory
+   - Or set the environment variable directly in your shell
+
+```bash
+# Required: Your OpenAI API key
+export OPENAI_API_KEY="your_openai_api_key_here"
+
+# Optional: Override the default model
+export OPENAI_MODEL="gpt-4.1-mini"
 ```
 
 ## Running the Server
@@ -45,8 +57,7 @@ The server will start on `http://localhost:8000`
 {
     "developer_message": "string",
     "user_message": "string",
-    "model": "gpt-4.1-mini",  // optional
-    "api_key": "your-openai-api-key"
+    "model": "gpt-4.1-mini"  // optional, defaults to gpt-4.1-mini
 }
 ```
 - **Response**: Streaming text response
@@ -68,9 +79,35 @@ The API is configured to accept requests from any origin (`*`). This can be modi
 
 ## Error Handling
 
-The API includes basic error handling for:
-- Invalid API keys
+The API includes comprehensive error handling for:
+- Missing or invalid OpenAI API keys
 - OpenAI API errors
 - General server errors
 
-All errors will return a 500 status code with an error message. 
+All errors will return appropriate HTTP status codes with descriptive error messages.
+
+## Deployment to Vercel
+
+This backend is configured for easy deployment to Vercel! 🚀
+
+### Environment Variables on Vercel
+
+1. **Deploy your project** to Vercel (it will automatically detect the Python/FastAPI setup)
+2. **Set environment variables** in your Vercel project dashboard:
+   - Go to your project settings
+   - Navigate to "Environment Variables"
+   - Add `OPENAI_API_KEY` with your actual OpenAI API key
+   - Optionally add `OPENAI_MODEL` if you want to override the default
+
+### Why Vercel is Awesome for Secrets
+
+- 🔐 **Secure**: Environment variables are encrypted and never exposed in your code
+- 🚀 **Easy**: Just click and type in the dashboard - no complex configuration needed
+- 🔄 **Automatic**: Variables are automatically available to your deployed app
+- 📱 **Mobile-friendly**: Manage secrets from anywhere via the Vercel dashboard
+
+### Local Development vs Production
+
+- **Local**: Use `.env` file or shell environment variables
+- **Production**: Set variables in Vercel dashboard
+- **No code changes needed** between environments! ✨ 
