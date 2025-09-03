@@ -52,7 +52,11 @@ async def chat(request: ChatRequest):
     try:
         # Get OpenAI API key from environment variable
         api_key = os.getenv("OPENAI_API_KEY")
+        print(f"🔍 Debug: API Key found: {'✅ Yes' if api_key else '❌ No'}")
+        print(f"🔍 Debug: API Key length: {len(api_key) if api_key else 0}")
+        
         if not api_key:
+            print("❌ Error: OPENAI_API_KEY not found in environment variables")
             raise HTTPException(
                 status_code=500, 
                 detail="OpenAI API key not configured. Please set OPENAI_API_KEY environment variable."
@@ -60,26 +64,37 @@ async def chat(request: ChatRequest):
         
         # Determine which model to use: request model > environment variable > default
         model = request.model or os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
+        print(f"🔍 Debug: Using model: {model}")
         
         # Initialize OpenAI client with the API key from environment
         client = OpenAI(api_key=api_key)
+        print("🔍 Debug: OpenAI client initialized successfully")
         
         # Create an async generator function for streaming responses
         async def generate():
-            # Create a streaming chat completion request
-            stream = client.chat.completions.create(
-                model=model,
-                messages=[
-                    {"role": "developer", "content": request.developer_message},
-                    {"role": "user", "content": request.user_message}
-                ],
-                stream=True  # Enable streaming response
-            )
-            
-            # Yield each chunk of the response as it becomes available
-            for chunk in stream:
-                if chunk.choices[0].delta.content is not None:
-                    yield chunk.choices[0].delta.content
+            try:
+                print("🔍 Debug: Starting OpenAI API call...")
+                # Create a streaming chat completion request
+                stream = client.chat.completions.create(
+                    model=model,
+                    messages=[
+                        {"role": "developer", "content": request.developer_message},
+                        {"role": "user", "content": request.user_message}
+                    ],
+                    stream=True  # Enable streaming response
+                )
+                print("🔍 Debug: OpenAI API call successful, streaming response...")
+                
+                # Yield each chunk of the response as it becomes available
+                for chunk in stream:
+                    if chunk.choices[0].delta.content is not None:
+                        content = chunk.choices[0].delta.content
+                        print(f"🔍 Debug: Streaming chunk: {content[:50]}...")
+                        yield content
+                        
+            except Exception as e:
+                print(f"❌ Error in streaming: {str(e)}")
+                yield f"Error: {str(e)}"
 
         # Return a streaming response to the client
         return StreamingResponse(generate(), media_type="text/plain")
@@ -88,6 +103,7 @@ async def chat(request: ChatRequest):
         # Re-raise HTTP exceptions (like missing API key)
         raise
     except Exception as e:
+        print(f"❌ Unexpected error in chat endpoint: {str(e)}")
         # Handle any other errors that occur during processing
         raise HTTPException(status_code=500, detail=str(e))
 
