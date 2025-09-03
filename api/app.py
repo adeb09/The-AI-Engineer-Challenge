@@ -9,6 +9,15 @@ from openai import OpenAI
 import os
 from typing import Optional
 
+# Load environment variables from .env file if it exists
+# This is useful for local development
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # dotenv is optional, so we'll continue without it
+    pass
+
 # Initialize FastAPI application with a title
 app = FastAPI(title="OpenAI Chat API")
 

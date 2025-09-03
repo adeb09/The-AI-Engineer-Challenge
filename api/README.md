@@ -33,6 +33,55 @@ export OPENAI_API_KEY="your_openai_api_key_here"
 export OPENAI_MODEL="gpt-4.1-mini"
 ```
 
+### 🚀 **Local Development with .env file (Recommended)**
+
+1. **Copy the example file**:
+```bash
+cp env.example .env
+```
+
+2. **Edit the `.env` file** and add your actual API key:
+```bash
+# .env file contents:
+OPENAI_API_KEY=sk-your-actual-api-key-here
+OPENAI_MODEL=gpt-4.1-mini  # optional
+```
+
+3. **Install the updated requirements**:
+```bash
+pip install -r requirements.txt
+```
+
+4. **Run the server** - it will automatically load your `.env` file:
+```bash
+python app.py
+```
+
+### 🔧 **Alternative: Shell Environment Variables**
+
+If you prefer not to use a `.env` file, you can set variables directly in your shell:
+
+**On macOS/Linux:**
+```bash
+export OPENAI_API_KEY="sk-your-actual-api-key-here"
+export OPENAI_MODEL="gpt-4.1-mini"  # optional
+python app.py
+```
+
+**On Windows (Command Prompt):**
+```cmd
+set OPENAI_API_KEY=sk-your-actual-api-key-here
+set OPENAI_MODEL=gpt-4.1-mini
+python app.py
+```
+
+**On Windows (PowerShell):**
+```powershell
+$env:OPENAI_API_KEY="sk-your-actual-api-key-here"
+$env:OPENAI_MODEL="gpt-4.1-mini"
+python app.py
+```
+
 ## Running the Server
 
 1. Make sure you're in the `api` directory:
