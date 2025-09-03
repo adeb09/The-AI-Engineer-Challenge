@@ -508,13 +508,7 @@ export default function Home() {
 
         {/* Footer */}
         <div className="text-center text-matrix-dim text-sm mt-4 font-terminal">
-          <p>© 2024 YOUR OPENAI CHAT TERMINAL - ChatGPT Interface</p>
-          <p className="text-xs opacity-75">Powered by OpenAI API | Protocol: v1.0 | Backend Configured</p>
-          <div className="flex justify-center space-x-4 mt-2 text-xs">
-            <span className="text-matrix-green">● SYSTEM_ACTIVE</span>
-            <span className="text-matrix-green">● API_CONFIGURED</span>
-            <span className="text-matrix-dim">● MATRIX_PROTOCOL</span>
-          </div>
+          <p>© 2025 YOUR OPENAI CHAT TERMINAL</p>
         </div>
       </div>
     </div>
