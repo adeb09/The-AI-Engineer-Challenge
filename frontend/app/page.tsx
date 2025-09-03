@@ -578,9 +578,9 @@ export default function Home() {
                 <Send size={16} />
               </button>
             </div>
-            <div className="text-xs text-matrix-dim mt-2 font-terminal">
-              COMMAND: Press Enter to send | Shift+Enter for new line
-            </div>
+                          <div className="text-xs text-matrix-dim mt-2 font-terminal">
+                COMMAND: Press Enter to send | Shift+Enter for new line
+              </div>
           </div>
         </div>
 
