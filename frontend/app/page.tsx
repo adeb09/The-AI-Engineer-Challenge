@@ -456,8 +456,6 @@ export default function Home() {
                 <p className="text-lg font-bold text-matrix-green mb-2">YOUR OPENAI CHAT TERMINAL INITIALIZED</p>
                 <p className="text-sm text-matrix-dim">Ready to communicate</p>
                 <div className="mt-4 text-xs text-matrix-green">
-                                      <p>Ready for input...</p>
-                  
                   <p>STATUS: Connected to backend</p>
                 </div>
               </div>
