@@ -35,11 +35,36 @@ export default function Home() {
   const [isConnected, setIsConnected] = useState(false)
   const [error, setError] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const [showSettings, setShowSettings] = useState(false)
   const [isClient, setIsClient] = useState(false)
+  const [isInputFocused, setIsInputFocused] = useState(false)
+  const [cursorPosition, setCursorPosition] = useState(0)
+  const [cursorOffset, setCursorOffset] = useState(0)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const calculateCursorPosition = (text: string, offset: number) => {
+    if (!inputRef.current) return 0
+    
+    // Get the text up to the cursor position
+    const textBeforeCursor = text.substring(0, offset)
+    
+    // Create a temporary span to measure text width
+    const tempSpan = document.createElement('span')
+    tempSpan.style.font = window.getComputedStyle(inputRef.current).font
+    tempSpan.style.visibility = 'hidden'
+    tempSpan.style.position = 'absolute'
+    tempSpan.style.whiteSpace = 'pre'
+    tempSpan.textContent = textBeforeCursor
+    
+    document.body.appendChild(tempSpan)
+    const width = tempSpan.getBoundingClientRect().width
+    document.body.removeChild(tempSpan)
+    
+    return width
   }
 
   useEffect(() => {
@@ -49,6 +74,12 @@ export default function Home() {
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  useEffect(() => {
+    if (isInputFocused) {
+      setCursorPosition(calculateCursorPosition(inputMessage, cursorOffset))
+    }
+  }, [isInputFocused, inputMessage, cursorOffset])
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) {
@@ -302,18 +333,53 @@ export default function Home() {
           {/* Input Terminal */}
           <div className="p-4 border-t border-matrix-green bg-matrix-dark-bg">
             <div className="flex space-x-2">
-              <div className="flex-1 flex items-center">
+              <div className="flex-1 flex items-center relative">
                 <span className="text-matrix-green mr-2 font-terminal">{'>'}</span>
                 <input
+                  ref={inputRef}
                   type="text"
                   value={inputMessage}
-                  onChange={(e) => setInputMessage(e.target.value)}
+                  onChange={(e) => {
+                    setInputMessage(e.target.value)
+                    setCursorOffset(e.target.value.length)
+                  }}
                   onKeyPress={handleKeyPress}
                   placeholder="Enter your message..."
                   className="matrix-input flex-1 bg-transparent border-none focus:ring-0"
                   disabled={isLoading}
+                  onFocus={(e) => {
+                    e.target.style.caretColor = 'transparent';
+                    setIsInputFocused(true);
+                    setCursorOffset(e.target.selectionStart || 0);
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.caretColor = '#00FF00';
+                    setIsInputFocused(false);
+                  }}
+                  onSelect={(e) => {
+                    const target = e.target as HTMLInputElement;
+                    setCursorOffset(target.selectionStart || 0);
+                  }}
+                  onKeyUp={(e) => {
+                    const target = e.target as HTMLInputElement;
+                    setCursorOffset(target.selectionStart || 0);
+                  }}
+                  onClick={(e) => {
+                    const target = e.target as HTMLInputElement;
+                    setCursorOffset(target.selectionStart || 0);
+                  }}
                 />
-
+                {/* Custom thick cursor */}
+                {isInputFocused && (
+                  <div 
+                    className="absolute w-3 h-6 bg-matrix-green opacity-80 animate-pulse"
+                    style={{
+                      left: `${cursorPosition + 28}px`,
+                      top: '50%',
+                      transform: 'translateY(-50%)'
+                    }}
+                  />
+                )}
               </div>
               <button
                 onClick={handleSendMessage}
