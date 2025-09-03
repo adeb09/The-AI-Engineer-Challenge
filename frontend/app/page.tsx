@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useMemo } from 'react'
-import { Send, Settings, User, Bot, Terminal, Zap, Brain, MessageSquare, Cpu, Sparkles, Signal, WifiOff } from 'lucide-react'
+import { Send, Settings, User, Bot, Terminal, Zap, Brain, MessageSquare, Cpu, Sparkles, Signal, WifiOff, Plus } from 'lucide-react'
 
 interface Message {
   id: string
@@ -16,6 +16,15 @@ interface MatrixRainColumn {
   delay: string
   chars: string[]
 }
+
+// Available OpenAI models
+const AVAILABLE_MODELS = [
+  { id: 'gpt-4.1-mini', name: 'GPT-4.1 Mini', description: 'Fast and efficient' },
+  { id: 'gpt-4o', name: 'GPT-4o', description: 'Latest and most capable' },
+  { id: 'gpt-4o-mini', name: 'GPT-4o Mini', description: 'Balanced performance' },
+  { id: 'gpt-4-turbo', name: 'GPT-4 Turbo', description: 'Previous generation' },
+  { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', description: 'Fast and affordable' }
+]
 
 // Custom OpenAI Logo Component
 const OpenAILogo = ({ size = 20, className = "" }: { size?: number, className?: string }) => (
@@ -48,6 +57,10 @@ export default function Home() {
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [cursorPosition, setCursorPosition] = useState(0)
   const [cursorOffset, setCursorOffset] = useState(0)
+  
+  // Model selection and chat session state
+  const [selectedModel, setSelectedModel] = useState('gpt-4.1-mini')
+  const [chatStarted, setChatStarted] = useState(false)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -90,10 +103,22 @@ export default function Home() {
 
 
 
+  const startNewChat = () => {
+    setMessages([])
+    setChatStarted(false)
+    setError('')
+    setIsConnected(false)
+  }
+
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) {
       setError('ERROR: MESSAGE_EMPTY')
       return
+    }
+
+    // Mark chat as started when first message is sent
+    if (!chatStarted) {
+      setChatStarted(true)
     }
 
     const userMessage: Message = {
@@ -117,7 +142,7 @@ export default function Home() {
         body: JSON.stringify({
           developer_message: "You are a helpful AI assistant. Respond in a friendly, conversational manner.",
           user_message: inputMessage,
-          model: "gpt-4.1-mini"
+          model: selectedModel
         }),
       })
 
@@ -346,6 +371,60 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Model Selection and New Chat Panel */}
+          {!chatStarted && (
+            <div className="p-4 border-b border-matrix-green bg-matrix-dark-bg">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-bold text-matrix-green">MODEL:</span>
+                    <select
+                      value={selectedModel}
+                      onChange={(e) => setSelectedModel(e.target.value)}
+                      className="matrix-select bg-matrix-bg border border-matrix-green text-matrix-green px-3 py-1 rounded text-sm focus:outline-none focus:ring-2 focus:ring-matrix-green"
+                      disabled={chatStarted}
+                    >
+                      {AVAILABLE_MODELS.map((model) => (
+                        <option key={model.id} value={model.id}>
+                          {model.name} - {model.description}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="text-xs text-matrix-dim">
+                    <span>Selected: {AVAILABLE_MODELS.find(m => m.id === selectedModel)?.name}</span>
+                  </div>
+                </div>
+                <button
+                  onClick={startNewChat}
+                  className="matrix-button flex items-center space-x-2 px-3 py-1"
+                >
+                  <Plus size={14} />
+                  <span>New Chat</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Model Display (when chat is active) */}
+          {chatStarted && (
+            <div className="p-3 border-b border-matrix-green bg-matrix-dark-bg">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-bold text-matrix-green">ACTIVE MODEL:</span>
+                  <span className="text-matrix-dim text-sm">{AVAILABLE_MODELS.find(m => m.id === selectedModel)?.name}</span>
+                </div>
+                <button
+                  onClick={startNewChat}
+                  className="matrix-button flex items-center space-x-2 px-2 py-1 text-sm"
+                >
+                  <Plus size={14} />
+                  <span>New Chat</span>
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Settings Panel */}
           {showSettings && (
             <div className="p-4 border-b border-matrix-green bg-matrix-dark-bg">
@@ -364,7 +443,8 @@ export default function Home() {
                 </div>
                 <div className="text-xs text-matrix-dim">
                   <p>API Key: Configured via environment variables</p>
-                  <p>Model: gpt-4.1-mini</p>
+                  <p>Current Model: {AVAILABLE_MODELS.find(m => m.id === selectedModel)?.name}</p>
+                  <p>Model ID: {selectedModel}</p>
                 </div>
               </div>
             </div>
@@ -379,7 +459,7 @@ export default function Home() {
                 <p className="text-sm text-matrix-dim">Ready to communicate - API key configured via backend</p>
                 <div className="mt-4 text-xs text-matrix-green">
                   <p>SYSTEM: Ready for input...</p>
-                  <p>PROTOCOL: ChatGPT v4.1-mini</p>
+                  <p>PROTOCOL: {AVAILABLE_MODELS.find(m => m.id === selectedModel)?.name}</p>
                   <p>STATUS: Connected to backend</p>
                 </div>
               </div>
@@ -508,7 +588,13 @@ export default function Home() {
 
         {/* Footer */}
         <div className="text-center text-matrix-dim text-sm mt-4 font-terminal">
-          <p>© 2025 YOUR OPENAI CHAT TERMINAL</p>
+          <p>© 2024 YOUR OPENAI CHAT TERMINAL - ChatGPT Interface</p>
+          <p className="text-xs opacity-75">Powered by OpenAI API | Protocol: v1.0 | Backend Configured</p>
+          <div className="flex justify-center space-x-4 mt-2 text-xs">
+            <span className="text-matrix-green">● SYSTEM_ACTIVE</span>
+            <span className="text-matrix-green">● API_CONFIGURED</span>
+            <span className="text-matrix-dim">● MATRIX_PROTOCOL</span>
+          </div>
         </div>
       </div>
     </div>

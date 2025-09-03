@@ -133,6 +133,31 @@
   .matrix-button {
     @apply bg-matrix-gray hover:bg-matrix-light-gray text-matrix-green font-bold py-2 px-4 rounded-none border border-matrix-green shadow-terminal transition-all duration-200 hover:shadow-matrix-glow;
   }
+
+  .matrix-select {
+    @apply bg-matrix-bg border border-matrix-green text-matrix-green px-3 py-1 rounded text-sm focus:outline-none focus:ring-2 focus:ring-matrix-green;
+    background: #0A0A0A;
+    color: #00FF00;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+  }
+
+  .matrix-select:focus {
+    outline: none;
+    border-color: #00FF00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+  }
+
+  .matrix-select option {
+    background-color: #0A0A0A;
+    color: #00FF00;
+    padding: 8px;
+  }
+
+  .matrix-select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
   
   .matrix-input {
     @apply border border-matrix-green rounded-none px-3 py-2 font-terminal bg-matrix-bg text-matrix-green focus:border-matrix-green focus:outline-none focus:shadow-matrix-glow;
