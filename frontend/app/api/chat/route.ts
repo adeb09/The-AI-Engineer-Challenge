@@ -4,11 +4,12 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     
-    // Get backend URL from environment variables, fallback to localhost for development
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:8000'
+    // Use relative URL since frontend and backend are on the same domain
+    // This eliminates the need to configure BACKEND_URL for production
+    const backendUrl = process.env.BACKEND_URL || '/api'
     
     // Forward the request to the FastAPI backend
-    const response = await fetch(`${backendUrl}/api/chat`, {
+    const response = await fetch(`${backendUrl}/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

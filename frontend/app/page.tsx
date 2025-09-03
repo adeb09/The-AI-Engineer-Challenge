@@ -442,9 +442,7 @@ export default function Home() {
                   </span>
                 </div>
                 <div className="text-xs text-matrix-dim">
-                  <p>API Key: Configured via environment variables</p>
                   <p>Current Model: {AVAILABLE_MODELS.find(m => m.id === selectedModel)?.name}</p>
-                  <p>Model ID: {selectedModel}</p>
                 </div>
               </div>
             </div>
