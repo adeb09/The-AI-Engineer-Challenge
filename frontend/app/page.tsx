@@ -455,7 +455,7 @@ export default function Home() {
                     setCursorOffset(e.target.value.length)
                   }}
                   onKeyPress={handleKeyPress}
-                  placeholder="Enter your message..."
+                  placeholder={isInputFocused ? "" : "Enter your message..."}
                   className="matrix-input flex-1 bg-transparent border-none focus:ring-0"
                   disabled={isLoading}
                   onFocus={(e) => {
