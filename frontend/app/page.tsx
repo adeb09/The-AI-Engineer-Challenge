@@ -454,10 +454,10 @@ export default function Home() {
               <div className="text-center text-matrix-dim mt-20">
                 <Terminal size={48} className="mx-auto mb-4 text-matrix-green" />
                 <p className="text-lg font-bold text-matrix-green mb-2">YOUR OPENAI CHAT TERMINAL INITIALIZED</p>
-                <p className="text-sm text-matrix-dim">Ready to communicate - API key configured via backend</p>
+                <p className="text-sm text-matrix-dim">Ready to communicate</p>
                 <div className="mt-4 text-xs text-matrix-green">
-                  <p>SYSTEM: Ready for input...</p>
-                  <p>PROTOCOL: {AVAILABLE_MODELS.find(m => m.id === selectedModel)?.name}</p>
+                                      <p>Ready for input...</p>
+                  
                   <p>STATUS: Connected to backend</p>
                 </div>
               </div>
