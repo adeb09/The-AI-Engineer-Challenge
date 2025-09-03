@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import { Send, Settings, User, Bot, Terminal, Zap, Brain, MessageSquare, Cpu, Sparkles, Signal, WifiOff } from 'lucide-react'
 
 interface Message {
@@ -8,6 +8,13 @@ interface Message {
   content: string
   sender: 'user' | 'ai'
   timestamp: Date
+}
+
+interface MatrixRainColumn {
+  id: number
+  left: string
+  delay: string
+  chars: string[]
 }
 
 // Custom OpenAI Logo Component
@@ -80,6 +87,8 @@ export default function Home() {
       setCursorPosition(calculateCursorPosition(inputMessage, cursorOffset))
     }
   }, [isInputFocused, inputMessage, cursorOffset])
+
+
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) {
@@ -165,45 +174,147 @@ export default function Home() {
     }
   }
 
-  // Generate deterministic Matrix rain characters
-  const generateMatrixRain = () => {
-    const characters = []
-    for (let i = 0; i < 20; i++) {
-      // Use a deterministic seed based on position
-      const seed = i * 7 + 13
-      const charCode = 0x30A0 + (seed % 96)
-      characters.push({
+  // Generate Matrix rain columns with falling characters
+  const generateMatrixRain = (): MatrixRainColumn[] => {
+    const columns: MatrixRainColumn[] = []
+    const numColumns = 40 // Much more columns for intense overlap
+    
+    for (let i = 0; i < numColumns; i++) {
+      const left = `${(i * 2.5) % 100}%` // Very close spacing for heavy overlap
+      const delay = `${(i * 0.05) % 1.5}s` // Even shorter delays for more simultaneous start
+      
+      // Create a column of characters with variety
+      const columnChars: string[] = []
+      for (let j = 0; j < 30; j++) { // More characters per column for longer trails
+        // Authentic Matrix-style characters: numbers, letters, and symbols
+        let char
+        if (Math.random() > 0.6) {
+          // Numbers (most common in Matrix)
+          char = Math.floor(Math.random() * 10).toString()
+        } else if (Math.random() > 0.3) {
+          // Letters (both uppercase and lowercase)
+          const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+          char = letters[Math.floor(Math.random() * letters.length)]
+        } else {
+          // Matrix symbols and special characters
+          const matrixSymbols = ['@', '#', '$', '%', '&', '*', '+', '=', '<', '>', '|', '\\', '/', '~', '^', '!', '?', ':', ';', '.', ',', '_', '-']
+          char = matrixSymbols[Math.floor(Math.random() * matrixSymbols.length)]
+        }
+        columnChars.push(char)
+      }
+      
+      columns.push({
         id: i,
-        char: String.fromCharCode(charCode),
-        left: `${(seed * 11) % 100}%`,
-        delay: `${(seed * 3) % 5}s`,
-        duration: `${3 + (seed % 2)}s`
+        left,
+        delay,
+        chars: columnChars
       })
     }
-    return characters
+    
+    // Add some random offset columns for even more overlap
+    for (let i = 0; i < 15; i++) {
+      const left = `${Math.random() * 100}%` // Random positions
+      const delay = `${Math.random() * 1}s` // Random delays
+      
+      const columnChars: string[] = []
+      for (let j = 0; j < 25; j++) {
+        let char
+        if (Math.random() > 0.6) {
+          char = Math.floor(Math.random() * 10).toString()
+        } else if (Math.random() > 0.3) {
+          const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+          char = letters[Math.floor(Math.random() * letters.length)]
+        } else {
+          const matrixSymbols = ['@', '#', '$', '%', '&', '*', '+', '=', '<', '>', '|', '\\', '/', '~', '^', '!', '?', ':', ';', '.', ',', '_', '-']
+          char = matrixSymbols[Math.floor(Math.random() * matrixSymbols.length)]
+        }
+        columnChars.push(char)
+      }
+      
+      columns.push({
+        id: numColumns + i,
+        left,
+        delay,
+        chars: columnChars
+      })
+    }
+    
+    return columns
   }
 
-  const matrixRainChars = generateMatrixRain()
+  // Use useMemo to generate Matrix rain only once and keep it stable
+  const matrixRainColumns = useMemo(() => generateMatrixRain(), [])
+
+  // Matrix rain animation effect - intense and fast
+  useEffect(() => {
+    if (!isClient) return
+
+    // Fast, intense animation using setInterval
+    const intervals: NodeJS.Timeout[] = []
+    
+    matrixRainColumns.forEach((column, index) => {
+      const speed = 20 + (index % 5) * 8 // Much faster: 20ms, 28ms, 36ms, 44ms, 52ms
+      const moveDistance = 3 + (index % 3) * 1 // Faster movement: 3px, 4px, 5px
+      
+      const interval = setInterval(() => {
+        const element = document.querySelector(`[data-matrix-column="${column.id}"]`) as HTMLElement
+        if (element) {
+          const currentTop = parseFloat(element.style.top || '0')
+          const newTop = currentTop + moveDistance
+          
+          if (newTop > window.innerHeight + 300) {
+            element.style.top = '-300px' // Reset to top when off screen
+          } else {
+            element.style.top = `${newTop}px`
+          }
+        }
+      }, speed)
+      
+      intervals.push(interval)
+    })
+    
+    // Cleanup intervals on unmount
+    return () => {
+      intervals.forEach(interval => clearInterval(interval))
+    }
+  }, [isClient, matrixRainColumns])
 
   return (
     <div className="min-h-screen bg-matrix-bg p-4 relative overflow-hidden">
       {/* Matrix rain background - only render on client */}
       {isClient && (
-        <div className="fixed inset-0 pointer-events-none">
-          {matrixRainChars.map((char) => (
-            <div
-              key={char.id}
-              className="absolute text-matrix-green text-xs opacity-20 animate-matrix-rain"
-              style={{
-                left: char.left,
-                animationDelay: char.delay,
-                animationDuration: char.duration
-              }}
-            >
-              {char.char}
-            </div>
-          ))}
-        </div>
+        <>
+          {/* Matrix grid overlay */}
+          <div className="matrix-grid"></div>
+          
+          {/* Matrix rain characters - JavaScript animated */}
+          <div className="fixed inset-0 pointer-events-none">
+
+            
+            {matrixRainColumns.map((column) => (
+              <div
+                key={column.id}
+                data-matrix-column={column.id}
+                style={{
+                  position: 'fixed',
+                  top: '0vh',
+                  left: column.left,
+                  color: '#00FF00',
+                  fontFamily: 'Courier New, monospace',
+                  fontSize: '24px',
+                  lineHeight: '1.8',
+                  textShadow: '0 0 20px #00FF00, 0 0 30px #00FF00',
+                  zIndex: -1,
+                  whiteSpace: 'nowrap',
+                  fontWeight: 'bold',
+                  opacity: 1.0
+                }}
+              >
+                {column.chars.join('\n')}
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       <div className="max-w-4xl mx-auto relative z-10">

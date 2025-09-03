@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Fira+Code:wght@400;500;600&family=Source+Code+Pro:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -25,9 +27,89 @@
       linear-gradient(90deg, transparent 98%, #00FF00 100%),
       linear-gradient(180deg, transparent 98%, #00FF00 100%);
     background-size: 50px 50px;
-    opacity: 0.1;
+    opacity: 0.4;
     z-index: -1;
     animation: matrixRain 20s linear infinite;
+  }
+
+  /* Matrix rain columns - direct CSS approach */
+  .matrix-rain-column {
+    position: fixed;
+    top: -100vh;
+    color: #00FF00;
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    line-height: 1.5;
+    text-shadow: 0 0 15px #00FF00, 0 0 25px #00FF00;
+    z-index: -1;
+    animation: matrixRainFall 8s linear infinite;
+    white-space: nowrap;
+    font-weight: bold;
+    opacity: 0.9;
+  }
+
+  .matrix-rain-column:nth-child(odd) {
+    animation-duration: 6s;
+    font-size: 16px;
+  }
+
+  .matrix-rain-column:nth-child(3n) {
+    animation-duration: 10s;
+    font-size: 20px;
+  }
+
+  .matrix-rain-column:nth-child(5n) {
+    animation-duration: 7s;
+    font-size: 14px;
+  }
+
+  @keyframes matrixRainFall {
+    0% {
+      transform: translateY(-100vh);
+      opacity: 0;
+    }
+    5% {
+      opacity: 0.9;
+    }
+    95% {
+      opacity: 0.9;
+    }
+    100% {
+      transform: translateY(100vh);
+      opacity: 0;
+    }
+  }
+
+  /* Additional Matrix grid overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 20% 50%, rgba(0, 255, 0, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(0, 255, 0, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(0, 255, 0, 0.1) 0%, transparent 50%);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Matrix grid lines */
+  .matrix-grid {
+    background-image: 
+      linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+    opacity: 0.3;
   }
 
   /* Terminal cursor blink */
@@ -56,7 +138,8 @@
     @apply border border-matrix-green rounded-none px-3 py-2 font-terminal bg-matrix-bg text-matrix-green focus:border-matrix-green focus:outline-none focus:shadow-matrix-glow;
     background: #000000;
     caret-color: #00FF00;
-    caret-width: thick;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Source Code Pro', 'Courier New', 'Courier', monospace;
+    font-weight: 500;
   }
   
   .matrix-message {

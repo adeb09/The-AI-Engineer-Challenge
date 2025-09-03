@@ -36,7 +36,9 @@ module.exports = {
       animation: {
         'matrix-fade': 'matrixFade 2s ease-in-out infinite',
         'terminal-blink': 'terminalBlink 1s infinite',
-        'matrix-rain': 'matrixRain 0.5s linear infinite',
+        'matrix-rain': 'matrixRain 8s linear infinite',
+        'matrix-rain-fast': 'matrixRainFast 4s linear infinite',
+        'matrix-rain-slow': 'matrixRainSlow 12s linear infinite',
         'glitch': 'glitch 0.3s ease-in-out infinite',
       },
       keyframes: {
@@ -49,8 +51,52 @@ module.exports = {
           '51%, 100%': { opacity: '0' },
         },
         matrixRain: {
-          '0%': { transform: 'translateY(-100%)' },
-          '100%': { transform: 'translateY(100vh)' },
+          '0%': { 
+            transform: 'translateY(-100vh)',
+            opacity: '0'
+          },
+          '10%': { 
+            opacity: '0.8'
+          },
+          '90%': { 
+            opacity: '0.8'
+          },
+          '100%': { 
+            transform: 'translateY(100vh)',
+            opacity: '0'
+          },
+        },
+        matrixRainFast: {
+          '0%': { 
+            transform: 'translateY(-100vh)',
+            opacity: '0'
+          },
+          '10%': { 
+            opacity: '0.9'
+          },
+          '90%': { 
+            opacity: '0.9'
+          },
+          '100%': { 
+            transform: 'translateY(100vh)',
+            opacity: '0'
+          },
+        },
+        matrixRainSlow: {
+          '0%': { 
+            transform: 'translateY(-100vh)',
+            opacity: '0'
+          },
+          '10%': { 
+            opacity: '0.7'
+          },
+          '90%': { 
+            opacity: '0.7'
+          },
+          '100%': { 
+            transform: 'translateY(100vh)',
+            opacity: '0'
+          },
         },
         glitch: {
           '0%, 100%': { transform: 'translate(0)' },
