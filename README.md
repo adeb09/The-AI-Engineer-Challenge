@@ -1,4 +1,4 @@
-<p align = "center" draggable=”false” ><img src="https://github.com/AI-Maker-Space/LLM-Dev-101/assets/37101144/d1343317-fa2f-41e1-8af1-1dbb18399719" 
+<p align = "center" draggable="false" ><img src="https://github.com/AI-Maker-Space/LLM-Dev-101/assets/37101144/d1343317-fa2f-41e1-8af1-1dbb18399719" 
      width="200px"
      height="auto"/>
 </p>
@@ -15,6 +15,30 @@
 In this repository, we'll walk you through the steps to create a LLM (Large Language Model) powered application with a vibe-coded frontend!
 
 Are you ready? Let's get started!
+
+<details>
+  <summary>🚀 Ready to Deploy?</summary>
+
+This application is now **production-ready** and can be deployed to Vercel! 
+
+🎯 **What's Included:**
+- ✅ Next.js frontend with modern UI
+- ✅ FastAPI backend with OpenAI integration
+- ✅ Environment variable configuration
+- ✅ CORS setup for production
+- ✅ Comprehensive deployment guide
+
+📖 **Quick Deploy:**
+1. Check out the [Deployment Guide](DEPLOYMENT.md) for step-by-step instructions
+2. Set up your environment variables
+3. Deploy to Vercel with one click!
+
+🔧 **Local Development:**
+- Frontend runs on `http://localhost:3000`
+- Backend runs on `http://localhost:8000`
+- Use `./start-dev.sh` to start both services
+
+</details>
 
 <details>
   <summary>🖥️ Accessing "gpt-4.1-mini" (ChatGPT) like a developer</summary>
