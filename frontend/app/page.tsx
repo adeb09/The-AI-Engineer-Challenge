@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Send, Settings, User, Bot, Terminal, Zap, Brain, MessageSquare, Cpu, Sparkles } from 'lucide-react'
+import { Send, Settings, User, Bot, Terminal, Zap, Brain, MessageSquare, Cpu, Sparkles, Signal, WifiOff } from 'lucide-react'
 
 interface Message {
   id: string
@@ -183,10 +183,14 @@ export default function Home() {
             <div className="flex items-center space-x-2">
               <OpenAILogo size={20} className="text-matrix-green" />
               <span className="text-xl font-bold tracking-wider text-matrix-green">OpenAI Chat Terminal</span>
-              <div className="flex space-x-1">
-                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-matrix-green' : 'bg-red-500'}`}></div>
-                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-matrix-green' : 'bg-red-500'}`}></div>
-                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-matrix-green' : 'bg-red-500'}`}></div>
+              <div className="flex items-center">
+                {isLoading ? (
+                  <div className="w-4 h-4 rounded-full bg-matrix-green animate-pulse"></div>
+                ) : isConnected ? (
+                  <div className="w-4 h-4 rounded-full bg-matrix-green"></div>
+                ) : (
+                  <div className="w-4 h-4 rounded-full bg-red-500"></div>
+                )}
               </div>
             </div>
             <div className="flex items-center space-x-2">
@@ -205,9 +209,15 @@ export default function Home() {
             <div className="p-4 border-b border-matrix-green bg-matrix-dark-bg">
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
-                  <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-matrix-green' : 'bg-red-500'}`}></div>
+                  {isLoading ? (
+                    <div className="w-4 h-4 rounded-full bg-matrix-green animate-pulse"></div>
+                  ) : isConnected ? (
+                    <div className="w-4 h-4 rounded-full bg-matrix-green"></div>
+                  ) : (
+                    <div className="w-4 h-4 rounded-full bg-red-500"></div>
+                  )}
                   <span className="text-sm font-bold text-matrix-green">
-                    STATUS: {isConnected ? 'CONNECTED' : 'DISCONNECTED'}
+                    STATUS: {isLoading ? 'PROCESSING' : isConnected ? 'CONNECTED' : 'DISCONNECTED'}
                   </span>
                 </div>
                 <div className="text-xs text-matrix-dim">
