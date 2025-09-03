@@ -579,7 +579,7 @@ export default function Home() {
               </button>
             </div>
             <div className="text-xs text-matrix-dim mt-2 font-terminal">
-              COMMAND: Press Enter to send | Shift+Enter for new line | Ctrl+C to abort
+              COMMAND: Press Enter to send | Shift+Enter for new line
             </div>
           </div>
         </div>
